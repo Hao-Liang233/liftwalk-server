@@ -11,6 +11,7 @@
             <input  name="send" type="submit" value="手動控制">
         </form>
         <select id="sel_setfile" name="sel">
+            <option value = ""></option>
             <% for(var i=0; i< list.length; i++){ %>
                 <option value = "<%- list[i] %>"><%- list[i] %></option>
             <% } %>

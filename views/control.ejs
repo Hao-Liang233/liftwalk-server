@@ -13,6 +13,7 @@
         <form action="/control" method="post">
             <label>設備選擇</label>
             <select name="sel_device" id="sel_device">
+                <option value = ""></option>
                 <% for(var i=0; i< device_list.length; i++){ %>
                     <option value = "<%- device_list[i] %>"><%- device_list[i] %></option>
                 <% } %>
@@ -20,6 +21,7 @@
             <br>
             <label>參數選擇</label>
             <select name="sel_setfile" id="sel_setfile">
+                <option value = ""></option>
                 <% for(var i=0; i< setfile_list.length; i++){ %>
                     <option value = "<%- setfile_list[i] %>"><%- setfile_list[i] %></option>
                 <% } %>
@@ -38,6 +40,7 @@
     </body>
     <script>
         $("#sel_device").change(function(){
+            if($(this).val() == "") return;
             $.ajax({
                 url:"/get_Device_data",
                 method:"post",
@@ -54,6 +57,7 @@
             });
         })
         $("#sel_setfile").change(function(){
+            if($(this).val() == "") return;
             $.ajax({
                 url:"/get_setfile_data",
                 method:"post",

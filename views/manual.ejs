@@ -14,6 +14,7 @@
 
         <label>設備選擇</label>
             <select name="sel_device" id="sel_device">
+                <option value = ""></option>
                 <% for(var i=0; i< device_list.length; i++){ %>
                     <option value = "<%- device_list[i] %>"><%- device_list[i] %></option>
                 <% } %>
@@ -124,6 +125,7 @@
                 var data={"mac" : $("#sel_device").val()}
                 socket.emit('manual_stop', data);
             });
+
         });
         
 /*         function btn_add_hight(num){

@@ -35,6 +35,9 @@ var sio = io(server);
 sio.on('connection', function(socket){
   console.log("Connected");
   // 接收'connection'事件訊息
+  socket.on("disconnect", () => {
+    console.log("disconnect"); // false
+  });
   socket.on('Connect', function (data) {
 
     //每一次ESP32確認連線狀態，判斷是否要更新資料到設備上
@@ -89,7 +92,8 @@ sio.on('connection', function(socket){
     //console.log('now_hight');
     // 卻日arduino有收到資料
     var index=datainfo.device.findIndex(i => i.mac===data.mac);
-    socket.emit('get_hight', datainfo.device[index]["now_hight"]);
+    if(index != -1)
+      socket.emit('get_hight', datainfo.device[index]["now_hight"]);
   });
 
   socket.on("manual", function(data){
@@ -110,8 +114,8 @@ sio.on('connection', function(socket){
     if(index != -1){
       datainfo.device[index]["web_control"] = 1;
       datainfo.device[index]["web_flag"] = 3;
+      socket.emit('manual_reset', datainfo.device[index]["initial_hight"]);
     }
-    socket.emit('manual_reset', datainfo.device[index]["initial_hight"]);
   });
 
   socket.on("manual_stop", function(data){
@@ -190,7 +194,7 @@ app.get("/control", function(req, res){
     show_data["name"]=datainfo.device[0]["mac"];
   }
   res.render("control",{device_list : getArray(datainfo.device, "mac"), setfile_list : getArray(datainfo.set_data, "name"),
-                        show_data : show_data});
+                        show_data : clean});
 });
 
 app.post("/control", function(req, res){
@@ -221,7 +225,7 @@ app.get("/manual", function(req, res){
   res.render("manual", {device_list : getArray(datainfo.device, "mac")});
 });
 
-app.post("/manual", function(req, res){
+/* app.post("/manual", function(req, res){
   var index=datainfo.device.findIndex(i => i.mac===req.body.mac);
   var show_data={"err" : 0};
   if(index != -1){
@@ -230,7 +234,7 @@ app.post("/manual", function(req, res){
     datainfo.device[index]["web_flag"] = 6;
   }
   res.send(show_data);
-});
+}); */
 
 app.post("/get_Device_data", function(req, res){
   var index=datainfo.device.findIndex(i => i.mac===req.body.mac);
