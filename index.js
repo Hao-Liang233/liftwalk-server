@@ -67,8 +67,8 @@ sio.on('connection', function(socket){
       datainfo.device.push(copy_data);
     }
     writeJSON(datainfo);
-    console.log(data.return);
-    console.log(data.now_hight);
+    //console.log(data.return);
+    //console.log(data.now_hight);
     if(data.return)
       socket.emit('Connect', datainfo.device[ind]);
   });
@@ -112,6 +112,15 @@ sio.on('connection', function(socket){
       datainfo.device[index]["web_flag"] = 3;
     }
     socket.emit('manual_reset', datainfo.device[index]["initial_hight"]);
+  });
+
+  socket.on("manual_stop", function(data){
+    var index=datainfo.device.findIndex(i => i.mac===data.mac);
+    //var show_data={"err" : 0};
+    if(index != -1){
+      datainfo.device[index]["web_control"] = 1;
+      datainfo.device[index]["web_flag"] = -1;
+    }
   });
 });
 

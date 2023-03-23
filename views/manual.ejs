@@ -31,7 +31,11 @@
             </p>
             <button class="add_button">+1</button>   
             <button class="add_button">+5</button>   
-            <button class="add_button">+10</button>              
+            <button class="add_button">+10</button>     
+            <br>
+            <button class="reduce_button">-1</button>   
+            <button class="reduce_button">-5</button>   
+            <button class="reduce_button">-10</button>         
             <p>
                 <label>目前設備</label>
                 <label id="now_device"></label>
@@ -43,7 +47,7 @@
             <br>
         <button id="implement" >開始移動</button>
         <button id="H_reset" >位置重製</button> 
-        <button id="stop" >停止移動</button>  <!-- 未製作 -->
+        <button id="stop" >停止移動</button> 
         <button id="isokinetic" >等速移動</button>  <!-- 未製作 -->
         
         <p id="req"></p>
@@ -55,6 +59,8 @@
         
     </body>
     <script>
+        var max_Hight=400;
+
         $(document).ready(function() {
             var socket = io.connect();
             // 2
@@ -97,9 +103,27 @@
                 var data={"mac" : $("#sel_device").val(),
                           "web_counter" : H_count+num,
                           "web_speed" : parseInt($("#speed").val())}
-                socket.emit('manual', data);
-                $("#hight").val(H_count + num);
+                if(H_count+num <= max_Hight){
+                    socket.emit('manual', data);
+                    $("#hight").val(H_count + num);
+                }
             })
+            $(".reduce_button").click(function(){
+                var num = parseInt($(this).text().substr(1));
+                var H_count=parseInt($("#hight").val());
+                var data={"mac" : $("#sel_device").val(),
+                          "web_counter" : H_count-num,
+                          "web_speed" : parseInt($("#speed").val())}
+                if(H_count+num >= 0){
+                    socket.emit('manual', data);
+                    $("#hight").val(H_count - num);
+                }
+            })
+
+            $("#stop").click(function(){
+                var data={"mac" : $("#sel_device").val()}
+                socket.emit('manual_stop', data);
+            });
         });
         
 /*         function btn_add_hight(num){
