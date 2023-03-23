@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+    </head>
+    <body>
+        <form method="post" action="/">
+            <input  name="send" type="submit" value="設備控制">
+            <input  name="send" type="submit" value="參數設定">
+            <input  name="send" type="submit" value="手動控制">
+        </form>
+        <form action="/control" method="post">
+            <label>設備選擇</label>
+            <select name="sel_device" id="sel_device">
+                <% for(var i=0; i< device_list.length; i++){ %>
+                    <option value = "<%- device_list[i] %>"><%- device_list[i] %></option>
+                <% } %>
+            </select>
+            <br>
+            <label>參數選擇</label>
+            <select name="sel_setfile" id="sel_setfile">
+                <% for(var i=0; i< setfile_list.length; i++){ %>
+                    <option value = "<%- setfile_list[i] %>"><%- setfile_list[i] %></option>
+                <% } %>
+            </select>
+            <br>
+            <label>目前參數</label>
+            <% for(var key in show_data){ %>
+                <p>
+                    <label><%- key %></label>
+                    <input type="text" id="<%- key %>" name="<%- key %>" value="<%= show_data[key] %>" readonly  unselectable="on">
+                </p>
+            <% } %>
+            <input type="submit" value="開始運作" name="send">
+        </form>
+
+    </body>
+    <script>
+        $("#sel_device").change(function(){
+            $.ajax({
+                url:"/get_Device_data",
+                method:"post",
+                dataType:"json",
+                data:{"mac" : $(this).val()},
+                success:function(res){
+                    //console.log(res)
+                    for(var key in res){
+                        //console.log(key);
+                        $("#"+key).val(res[key]);
+                    }
+                },
+                error:function(err){console.log(err)},
+            });
+        })
+        $("#sel_setfile").change(function(){
+            $.ajax({
+                url:"/get_setfile_data",
+                method:"post",
+                dataType:"json",
+                data:{"name" : $(this).val()},
+                success:function(res){
+                    //console.log(res)
+                    for(var key in res){
+                        //console.log(key);
+                        $("#"+key).val(res[key]);
+                    }
+                },
+                error:function(err){console.log(err)},
+            });
+        })
+    </script>
+</html>
