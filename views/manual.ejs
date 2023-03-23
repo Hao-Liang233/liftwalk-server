@@ -115,7 +115,7 @@
                 var data={"mac" : $("#sel_device").val(),
                           "web_counter" : H_count-num,
                           "web_speed" : parseInt($("#speed").val())}
-                if(H_count+num >= 0){
+                if(H_count-num >= 0){
                     socket.emit('manual', data);
                     $("#hight").val(H_count - num);
                 }

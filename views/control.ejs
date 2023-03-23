@@ -27,13 +27,17 @@
                 <% } %>
             </select>
             <br>
-            <label>目前參數</label>
+            <label>目前參數：</label>
             <% for(var key in show_data){ %>
                 <p>
                     <label><%- key %></label>
                     <input type="text" id="<%- key %>" name="<%- key %>" value="<%= show_data[key] %>" readonly  unselectable="on">
                 </p>
             <% } %>
+            <p>
+                <label>目前設備</label>
+                <label id="now_device"></label>
+            </p>
             <input type="submit" value="開始運作" name="send">
         </form>
 
@@ -73,5 +77,9 @@
                 error:function(err){console.log(err)},
             });
         })
+
+        $("#sel_device").change(function(){
+            $("#now_device").text($(this).val());
+        });
     </script>
 </html>

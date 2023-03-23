@@ -217,7 +217,7 @@ app.post("/control", function(req, res){
   }
   writeJSON(datainfo);
   res.render("control",{device_list : getArray(datainfo.device, "mac"), setfile_list : getArray(datainfo.set_data, "name"),
-                        show_data : show_data});
+                        show_data : clean});
 });
 
 app.get("/manual", function(req, res){
