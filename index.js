@@ -98,6 +98,7 @@ sio.on('connection', function(socket){
     if(index != -1){
       datainfo.device[index]["web_control"] = 1;
       datainfo.device[index]["web_counter"] = data.web_counter;
+      datainfo.device[index]["web_speed"] = data.web_speed;
       datainfo.device[index]["web_flag"] = 6;
     }
     console.log(data);

@@ -20,13 +20,13 @@
             </select>
             <br>
             <p>
-                <label>高度</label>
+                <label>高度</label> <!-- 最大400 -->
                 <input id="hight" type="number" name="web_counter" max="400" min="0" value="0">
                 <label>mm</label>
             </p>
             <p>
-                <label>速度</label>
-                <input id="speed" type="number" name="web_counter" max="400" min="0" value="0">
+                <label>速度</label> <!-- 最大300 -->
+                <input id="speed" type="number" name="web_counter" max="400" min="0" value="100">
                 <label>rpm</label>
             </p>
             <button class="add_button">+1</button>   
@@ -42,7 +42,7 @@
             </p>
             <br>
         <button id="implement" >開始移動</button>
-        <button id="H_reset" >位置重製</button>  <!-- 未測試 -->
+        <button id="H_reset" >位置重製</button> 
         <button id="stop" >停止移動</button>  <!-- 未製作 -->
         <button id="isokinetic" >等速移動</button>  <!-- 未製作 -->
         
@@ -78,8 +78,10 @@
             });
 
             $("#implement").click(function(){
+                
                 var data={"mac" : $("#sel_device").val(),
-                          "web_counter" : parseInt($("#hight").val())}
+                          "web_counter" : parseInt($("#hight").val()),
+                          "web_speed" : parseInt($("#speed").val())}
                 socket.emit('manual', data);
             });
 
@@ -93,7 +95,8 @@
                 var num = parseInt($(this).text().substr(1));
                 var H_count=parseInt($("#hight").val());
                 var data={"mac" : $("#sel_device").val(),
-                          "web_counter" : H_count+num};
+                          "web_counter" : H_count+num,
+                          "web_speed" : parseInt($("#speed").val())}
                 socket.emit('manual', data);
                 $("#hight").val(H_count + num);
             })
