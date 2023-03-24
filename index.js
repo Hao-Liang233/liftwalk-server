@@ -156,7 +156,8 @@ app.post("/", function(req, res) {
 app.get('/set_up', function(req, res) {
   //res.render("index", {result : "", indata : clean});
   //console.log(name_list);
-  res.render("set_up",{result : "", indata : clean, list : getArray(datainfo.set_data, "name")});
+  res.render("set_up",{result : "", indata : clean, list : getArray(datainfo.set_data, "name"),
+                       device_list : getArray(datainfo.device, "mac")});
 });
 
 var updelay = 0;
@@ -166,7 +167,8 @@ app.post('/set_up', function(req, res) {
     datainfo.set_data.forEach(function(value, index, array){
       if(value.name == req.body.sel){
         //res.render("index",{result : ""});
-        res.render("set_up", { result : "", indata : value, list : getArray(datainfo.set_data, "name") });
+        res.render("set_up", { result : "", indata : value, list : getArray(datainfo.set_data, "name") ,
+                               device_list : getArray(datainfo.device, "mac")});
         return 0;
       }
     });
@@ -182,7 +184,8 @@ app.post('/set_up', function(req, res) {
   //console.log(newdata);
   //res.render("index",{result : ""});
   
-  res.render("set_up", { result : "成功"+req.body.btn, indata : clean, list : getArray(datainfo.set_data, "name") });
+  res.render("set_up", { result : "成功"+req.body.btn, indata : clean, list : getArray(datainfo.set_data, "name") ,
+                         device_list : getArray(datainfo.device, "mac")});
 });
 
 app.get("/control", function(req, res){
@@ -261,6 +264,13 @@ app.post("/get_setfile_data", function(req, res){
     }
   }
   res.send(show_data);
+});
+
+app.post("/delete_Device", function(req, res){
+  var D_ind=datainfo.device.findIndex(i => i.mac===req.body.mac);
+  delete datainfo.device[D_ind];
+  console.log(datainfo.device);
+  writeJSON(datainfo);
 });
 
 /* app.post("/web_manual", function(req, res){
