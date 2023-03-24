@@ -93,7 +93,8 @@ sio.on('connection', function(socket){
     // 卻日arduino有收到資料
     var index=datainfo.device.findIndex(i => i.mac===data.mac);
     if(index != -1)
-      socket.emit('get_hight', datainfo.device[index]["now_hight"]);
+      socket.emit('get_hight', {"now_hight":datainfo.device[index]["now_hight"],
+                                "max_hight":datainfo.device[index]["max_hight"]});
   });
 
   socket.on("manual", function(data){
@@ -268,9 +269,10 @@ app.post("/get_setfile_data", function(req, res){
 
 app.post("/delete_Device", function(req, res){
   var D_ind=datainfo.device.findIndex(i => i.mac===req.body.mac);
-  delete datainfo.device[D_ind];
-  console.log(datainfo.device);
+  datainfo.device.splice(D_ind, 1);
+  //console.log(datainfo.device);
   writeJSON(datainfo);
+  res.send('1');
 });
 
 /* app.post("/web_manual", function(req, res){
