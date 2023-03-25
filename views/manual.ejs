@@ -67,7 +67,9 @@
             // 2
             socket.on('get_hight', function(m) {
                 //console.log(m);
-                $("#shwo_now_hight").text(m);
+                $("#shwo_now_hight").text(m.now_hight);
+                if($("#hight").val()>m.max_hight) $("#hight").val(m.max_hight);
+                console.log(m);
                 /* $('#panel').html($('#panel').html()+'<br>'+m); */
             });
 
