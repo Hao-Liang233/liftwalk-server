@@ -10,7 +10,7 @@
             <input  name="send" type="submit" value="參數設定">
             <input  name="send" type="submit" value="手動控制">
         </form>
-        <form action="/control" method="post">
+        <form action="/control" id="control_form" method="post">
             <label>設備選擇</label>
             <select name="sel_device" id="sel_device">
                 <option value = ""></option>
@@ -38,11 +38,12 @@
                 <label>目前設備</label>
                 <label id="now_device"></label>
             </p>
-            <input type="submit" value="開始運作" name="send">
+            <input type="submit" id="start_up" value="開始運作" name="send">
         </form>
 
     </body>
     <script>
+        var max_hight=0;
         $("#sel_device").change(function(){
             if($(this).val() == "") return;
             $.ajax({
@@ -56,6 +57,7 @@
                         //console.log(key);
                         $("#"+key).val(res[key]);
                     }
+                    max_hight=res["max_hight"];
                 },
                 error:function(err){console.log(err)},
             });
@@ -81,5 +83,22 @@
         $("#sel_device").change(function(){
             $("#now_device").text($(this).val());
         });
+
+        $("#start_up").click(function(){
+            var str="";
+            let data = {};
+            let value = $('#control_form').serializeArray();
+            $.each(value, function (index, item) {
+              data[item.name] = item.value;
+            });
+            //let json = JSON.stringify(data);
+            if(data["sel_device"] == "") str="請選擇設備";
+            else if(data["step1_Hight"]+data["step2_Hight"]+data["step3_Hight"] > max_hight) str="操作高度超過該設備的高度";
+            if(str != ""){
+                alert(str);
+                return false;
+            }
+            return true;
+        })
     </script>
 </html>

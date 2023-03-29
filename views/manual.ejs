@@ -70,6 +70,7 @@
                 $("#shwo_now_hight").text(m.now_hight);
                 if($("#hight").val()>m.max_hight) $("#hight").val(m.max_hight);
                 console.log(m);
+                max_Hight = m.max_hight;
                 /* $('#panel').html($('#panel').html()+'<br>'+m); */
             });
 
@@ -130,39 +131,9 @@
 
         });
         
-/*         function btn_add_hight(num){
-            var H_count=parseInt($("#hight").val());
-            $.ajax({
-                url:"/manual",
-                method:"post",
-                dataType:"json",
-                data:{"mac" : $("#sel_device").val(),
-                      "web_counter" : H_count + num},
-                success:function(res){
-                    console.log(res);
-                    $("#hight").val(H_count + num);
-                },
-                error:function(err){console.log(err)},
-            });
-        } */
-
         $("#sel_device").change(function(){
             $("#now_device").text($(this).val());
         });
-
-        /* $("#implement").click(function(){
-            $.ajax({
-                url:"/manual",
-                method:"post",
-                dataType:"json",
-                data:{"mac" : $("#sel_device").val(),
-                      "web_counter" : parseInt($("#hight").val())},
-                success:function(res){
-                    console.log(res)
-                },
-                error:function(err){console.log(err)},
-            });
-        }); */
         
     </script>
 </html>

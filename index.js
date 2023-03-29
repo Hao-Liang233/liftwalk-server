@@ -203,7 +203,7 @@ app.get("/control", function(req, res){
 
 app.post("/control", function(req, res){
   var D_ind=datainfo.device.findIndex(i => i.mac===req.body.sel_device);
-  //var S_ind=datainfo.set_data.findIndex(i => i.name===req.body.sel_setfile);
+  var S_ind=datainfo.set_data.findIndex(i => i.name===req.body.sel_setfile);
   if(D_ind != -1){
     for(var key in clean){
       if(key != "name")
@@ -213,12 +213,12 @@ app.post("/control", function(req, res){
     datainfo.device[D_ind]["web_flag"] = 1;
   }
   var show_data=JSON.parse(JSON.stringify(clean));
-  if(datainfo.device.length){
+  /* if(datainfo.device.length){
     for(var key in show_data){
       show_data[key]=datainfo.device[0][key];
     }
     show_data["name"]=datainfo.device[0]["mac"];
-  }
+  } */
   writeJSON(datainfo);
   res.render("control",{device_list : getArray(datainfo.device, "mac"), setfile_list : getArray(datainfo.set_data, "name"),
                         show_data : clean});
@@ -228,17 +228,6 @@ app.get("/manual", function(req, res){
 
   res.render("manual", {device_list : getArray(datainfo.device, "mac")});
 });
-
-/* app.post("/manual", function(req, res){
-  var index=datainfo.device.findIndex(i => i.mac===req.body.mac);
-  var show_data={"err" : 0};
-  if(index != -1){
-    datainfo.device[index]["web_control"] = 1;
-    datainfo.device[index]["web_counter"] = req.body.web_counter;
-    datainfo.device[index]["web_flag"] = 6;
-  }
-  res.send(show_data);
-}); */
 
 app.post("/get_Device_data", function(req, res){
   var index=datainfo.device.findIndex(i => i.mac===req.body.mac);
@@ -251,7 +240,7 @@ app.post("/get_Device_data", function(req, res){
       }
       show_data[key]=datainfo.device[index][key];
     }
-    
+    show_data["max_hight"]=datainfo.device[index]["max_hight"];
   }
   res.send(show_data);
 });
