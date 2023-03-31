@@ -1,139 +1,157 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <script src="/socket.io/socket.io.js"></script>
-        <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
-    </head>
-    <body>
-        <form method="post" action="/">
-            <input  name="send" type="submit" value="設備控制">
-            <input  name="send" type="submit" value="參數設定">
-            <input  name="send" type="submit" value="手動控制">
-        </form>
 
-        <label>設備選擇</label>
-            <select name="sel_device" id="sel_device">
-                <option value = ""></option>
+<head>
+    <meta charset="utf-8" />
+    <script src="/socket.io/socket.io.js"></script>
+    <!-- <script src="https://code.jquery.com/jquery-3.4.1.js"></script> -->
+    <script src="/jquery/jquery.js"></script>
+</head>
+
+<body>
+    <%- include('../components/header.ejs'); %>
+        <div class="container">
+            <label class="form-label mt-5">設備選擇</label>
+            <select name="sel_device" id="sel_device" class="form-select mt-3" aria-label="sel_device">
+                <option value=""></option>
                 <% for(var i=0; i< device_list.length; i++){ %>
-                    <option value = "<%- device_list[i] %>"><%- device_list[i] %></option>
-                <% } %>
+                    <option value="<%- device_list[i] %>"><%- device_list[i] %></option>
+                    <% } %>
             </select>
-            <br>
+            <hr class="hr" />
+
+            <div class="input-group my-3">
+                <!-- 最大400 -->
+                <span class="input-group-text">高度</span>
+                <input type="number" id="hight" name="web_counter" class="form-control" max="400" min="0" value="100" />
+                <span class="input-group-text">mm</span>
+            </div>
+            <div class="input-group my-3">
+                <!-- 最大300 -->
+                <span class="input-group-text">速度</span>
+                <input id="speed" type="number" name="web_counter" max="400" min="0" value="100" class="form-control" />
+                <span class="input-group-text">rpm</span>
+            </div>
+            <div class="row">
+                <div class="col d-flex justify-content-start">
+                    <button class="reduce_button btn btn-info btn-lg me-5">-1</button>
+                    <button class="reduce_button btn btn-info btn-lg me-5">-5</button>
+                    <button class="reduce_button btn btn-info btn-lg">-10</button>
+                </div>
+                <div class="col d-flex justify-content-end">
+                    <button class="add_button btn btn-info btn-lg me-5">+1</button>
+                    <button class="add_button btn btn-info btn-lg me-5">+5</button>
+                    <button class="add_button btn btn-info btn-lg">+10</button>
+                </div>
+            </div>
+
             <p>
-                <label>高度</label> <!-- 最大400 -->
-                <input id="hight" type="number" name="web_counter" max="400" min="0" value="0">
-                <label>mm</label>
+                <label class="form-label mt-3">目前設備</label>
+                <label class="form-label" id="now_device"></label>
             </p>
             <p>
-                <label>速度</label> <!-- 最大300 -->
-                <input id="speed" type="number" name="web_counter" max="400" min="0" value="100">
-                <label>rpm</label>
+                <label class="form-label">目前高度</label>
+                <label class="form-label" id="shwo_now_hight"></label>
             </p>
-            <button class="add_button">+1</button>   
-            <button class="add_button">+5</button>   
-            <button class="add_button">+10</button>     
-            <br>
-            <button class="reduce_button">-1</button>   
-            <button class="reduce_button">-5</button>   
-            <button class="reduce_button">-10</button>         
-            <p>
-                <label>目前設備</label>
-                <label id="now_device"></label>
-            </p>
-            <p>
-                <label>目前高度</label>
-                <label id="shwo_now_hight"></label>
-            </p>
-            <br>
-        <button id="implement" >開始移動</button>
-        <button id="H_reset" >位置重製</button> 
-        <button id="stop" >停止移動</button> 
-        <!-- <button id="isokinetic" >等速移動</button> -->  <!-- 未製作 -->
-        
-        <p id="req"></p>
-        <!-- <form action="/control" method="post">
+            <div class="d-flex justify-content-between">
+                <button id="implement" class="btn btn-primary">開始移動</button>
+                <button id="H_reset" class="btn btn-primary">位置重製</button>
+                <button id="stop" class="btn btn-primary">停止移動</button>
+            </div>
+            <!-- <button id="isokinetic" >等速移動</button> -->
+            <!-- 未製作 -->
+
+            <p id="req"></p>
+            <!-- <form action="/control" method="post">
             
             
             <input type="submit" value="開始運作" name="send">
         </form> -->
-        
-    </body>
-    <script>
-        var max_Hight=400;
+        </div>
+</body>
 
-        $(document).ready(function() {
-            var socket = io.connect();
-            // 2
-            socket.on('get_hight', function(m) {
-                //console.log(m);
-                $("#shwo_now_hight").text(m.now_hight);
-                if($("#hight").val()>m.max_hight) $("#hight").val(m.max_hight);
-                console.log(m);
-                max_Hight = m.max_hight;
-                /* $('#panel').html($('#panel').html()+'<br>'+m); */
-            });
+<script>
+    var max_Hight = 400;
 
-            socket.on('manual_reset', function(m) {
-                //console.log(m);
-                $("#hight").val(m);
-                /* $('#panel').html($('#panel').html()+'<br>'+m); */
-            });
+    $(document).ready(function () {
+        var socket = io.connect();
+        // 2
+        socket.on('get_hight', function (m) {
+            //console.log(m);
+            $("#shwo_now_hight").text(m.now_hight);
+            if ($("#hight").val() > m.max_hight) $("#hight").val(m.max_hight);
+            console.log(m);
+            max_Hight = m.max_hight;
+            /* $('#panel').html($('#panel').html()+'<br>'+m); */
+        });
 
-            $(function(){
-                setInterval(function () {
-                    socket.emit('get_hight', {"mac" : $("#sel_device").val()});
-                    //console.log("1");
-                },500);
-            });
+        socket.on('manual_reset', function (m) {
+            //console.log(m);
+            $("#hight").val(m);
+            /* $('#panel').html($('#panel').html()+'<br>'+m); */
+        });
 
-            $("#implement").click(function(){
-                
-                var data={"mac" : $("#sel_device").val(),
-                          "web_counter" : parseInt($("#hight").val()),
-                          "web_speed" : parseInt($("#speed").val())}
+        $(function () {
+            setInterval(function () {
+                socket.emit('get_hight', { "mac": $("#sel_device").val() });
+                //console.log("1");
+            }, 500);
+        });
+
+        $("#implement").click(function () {
+
+            var data = {
+                "mac": $("#sel_device").val(),
+                "web_counter": parseInt($("#hight").val()),
+                "web_speed": parseInt($("#speed").val())
+            }
+            socket.emit('manual', data);
+        });
+
+        $("#H_reset").click(function () {
+            var data = { "mac": $("#sel_device").val() }
+            socket.emit('manual_reset', data);
+        });
+
+
+        $(".add_button").click(function () {
+            var num = parseInt($(this).text().substr(1));
+            var H_count = parseInt($("#hight").val());
+            var data = {
+                "mac": $("#sel_device").val(),
+                "web_counter": H_count + num,
+                "web_speed": parseInt($("#speed").val())
+            }
+            if (H_count + num <= max_Hight) {
                 socket.emit('manual', data);
-            });
+                $("#hight").val(H_count + num);
+            }
+        })
+        $(".reduce_button").click(function () {
+            var num = parseInt($(this).text().substr(1));
+            var H_count = parseInt($("#hight").val());
+            var data = {
+                "mac": $("#sel_device").val(),
+                "web_counter": H_count - num,
+                "web_speed": parseInt($("#speed").val())
+            }
+            if (H_count - num >= 0) {
+                socket.emit('manual', data);
+                $("#hight").val(H_count - num);
+            }
+        })
 
-            $("#H_reset").click(function(){
-                var data={"mac" : $("#sel_device").val()}
-                socket.emit('manual_reset', data);
-            });
-
-            
-            $(".add_button").click(function(){
-                var num = parseInt($(this).text().substr(1));
-                var H_count=parseInt($("#hight").val());
-                var data={"mac" : $("#sel_device").val(),
-                          "web_counter" : H_count+num,
-                          "web_speed" : parseInt($("#speed").val())}
-                if(H_count+num <= max_Hight){
-                    socket.emit('manual', data);
-                    $("#hight").val(H_count + num);
-                }
-            })
-            $(".reduce_button").click(function(){
-                var num = parseInt($(this).text().substr(1));
-                var H_count=parseInt($("#hight").val());
-                var data={"mac" : $("#sel_device").val(),
-                          "web_counter" : H_count-num,
-                          "web_speed" : parseInt($("#speed").val())}
-                if(H_count-num >= 0){
-                    socket.emit('manual', data);
-                    $("#hight").val(H_count - num);
-                }
-            })
-
-            $("#stop").click(function(){
-                var data={"mac" : $("#sel_device").val()}
-                socket.emit('manual_stop', data);
-            });
-
+        $("#stop").click(function () {
+            var data = { "mac": $("#sel_device").val() }
+            socket.emit('manual_stop', data);
         });
-        
-        $("#sel_device").change(function(){
-            $("#now_device").text($(this).val());
-        });
-        
-    </script>
+
+    });
+
+    $("#sel_device").change(function () {
+        $("#now_device").text($(this).val());
+    });
+
+</script>
+
 </html>

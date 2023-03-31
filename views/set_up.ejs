@@ -1,102 +1,118 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
-    </head>
-    <body>
-        <form method="post" action="/">
-            <input  name="send" type="submit" value="設備控制">
-            <input  name="send" type="submit" value="參數設定">
-            <input  name="send" type="submit" value="手動控制">
-        </form>
-        <select id="sel_setfile" name="sel">
-            <option value = ""></option>
-            <% for(var i=0; i< list.length; i++){ %>
-                <option value = "<%- list[i] %>"><%- list[i] %></option>
-            <% } %>
-        </select>
-        
-        <form action="/set_up" id="form_box" method="post">
-            <% for(var key in indata){ %>
-                <p>
-                    <label><%- key %></label>
-                    <input type="text" id="<%- key %>" name="<%- key %>" value="<%= indata[key] %>">
-                </p>
-            <% } %>
-            <input type="submit" id="renew_btn" value="renew" name="btn">
-            <input type="submit" id="delete_btn" value="delete" name="btn">
-        </form>
-        <p><%= result %></p>
 
-        <label>設備選擇</label>
-        <select name="sel_device" id="sel_device">
-            <option value = ""></option>
-            <% for(var i=0; i< device_list.length; i++){ %>
-                <option value = "<%- device_list[i] %>"><%- device_list[i] %></option>
-            <% } %>
-        </select>
-        <button id="device_delete">設備刪除</button>
-    </body>
-    <script>
-        
-        $("#sel_setfile").change(function(){
-            $.ajax({
-                url:"/get_setfile_data",
-                method:"post",
-                dataType:"json",
-                data:{"name" : $(this).val()},
-                success:function(res){
-                    //console.log(res)
-                    for(var key in res){
-                        //console.log(key);
-                        $("#"+key).val(res[key]);
-                    }
-                },
-                error:function(err){console.log(err)},
-            });
-        });
-        $("#device_delete").click(function(){
-            if($("#sel_device").val() != ""){
-                $.ajax({
-                    url:"/delete_Device",
-                    method:"post",
-                    dataType:"json",
-                    data:{"mac" : $("#sel_device").val()},
-                    success:function(res){
-                        location.reload();
-                    },
-                    error:function(err){console.log(err)},
-                });
-            }
-            else{
-                alert("請選擇要刪除的設備");
-            }
-        });
+<head>
+    <meta charset="utf-8" />
+    <script src="/jquery/jquery.js"></script>
+</head>
 
-        function form_box_check (){
-            var str="";
-            let data = {};
-            let value = $('#form_box').serializeArray();
-            $.each(value, function (index, item) {
-              data[item.name] = item.value;
-            });
-            //let json = JSON.stringify(data);
-            if(data["name"] == "") str="請輸入參數名稱";
-            for(key in data){
-                if(key != "name"){
-                    if(isNaN(data[key])) str="請輸入數字";
+<body>
+    <%- include('../components/header.ejs'); %>
+        <div class="container">
+            <select id="sel_setfile" name="sel" class="form-select mt-5" aria-label="sel_setfile">
+                <option value=""></option>
+                <% for(var i=0; i< list.length; i++){ %>
+                    <option value="<%- list[i] %>"><%- list[i] %></option>
+                    <% } %>
+            </select>
+            <hr class="hr" />
+
+            <form action="/set_up" method="post">
+                <% for(var key in indata){ %>
+                    <p>
+                        <label class="form-label"><%- key %></label>
+                        <input type="text" id="<%- key %>" name="<%- key %>" value="<%= indata[key] %>"
+                            class="form-control" />
+                    </p>
+                    <% } %>
+                        <button type="submit" value="renew" name="btn" class="btn btn-primary mb-5 me-2">
+                            renew
+                        </button>
+                        <button type="submit" value="delete" name="btn" class="btn btn-primary mb-5">
+                            delete
+                        </button>
+            </form>
+            <p>
+                <%= result %>
+            </p>
+            <label class="form-label">設備選擇</label>
+            <select name="sel_device" id="sel_device" class="form-select">
+                <option value=""></option>
+                <% for(var i=0; i< device_list.length; i++){ %>
+                    <option value="<%- device_list[i] %>"><%- device_list[i] %></option>
+                    <% } %>
+            </select>
+            <button id="device_delete" class="btn btn-primary mt-3">設備刪除</button>
+        </div>
+
+
+
+</body>
+<script>
+    $(document).ready(function () {
+        $("input[name=step1_Hight]").after('<hr class="hr" />');
+        $("input[name=step2_Hight]").after('<hr class="hr" />');
+        $("input[name=step3_Hight]").after('<hr class="hr" />');
+    });
+
+    $("#sel_setfile").change(function () {
+        $.ajax({
+            url: "/get_setfile_data",
+            method: "post",
+            dataType: "json",
+            data: { "name": $(this).val() },
+            success: function (res) {
+                //console.log(res)
+                for (var key in res) {
+                    //console.log(key);
+                    $("#" + key).val(res[key]);
                 }
-            }
-            if(str != ""){
-                alert(str);
-                return false;
-            }
-            return true;
+            },
+            error: function (err) { console.log(err) },
+        });
+    });
+    $("#device_delete").click(function () {
+        if ($("#sel_device").val() != "") {
+            $.ajax({
+                url: "/delete_Device",
+                method: "post",
+                dataType: "json",
+                data: { "mac": $("#sel_device").val() },
+                success: function (res) {
+                    location.reload();
+                },
+                error: function (err) { console.log(err) },
+            });
         }
+        else {
+            alert("請選擇要刪除的設備");
+        }
+    });
 
-        $("#renew_btn").click(form_box_check);
+    function form_box_check() {
+        var str = "";
+        let data = {};
+        let value = $('#form_box').serializeArray();
+        $.each(value, function (index, item) {
+            data[item.name] = item.value;
+        });
+        //let json = JSON.stringify(data);
+        if (data["name"] == "") str = "請輸入參數名稱";
+        for (key in data) {
+            if (key != "name") {
+                if (isNaN(data[key])) str = "請輸入數字";
+            }
+        }
+        if (str != "") {
+            alert(str);
+            return false;
+        }
+        return true;
+    }
 
-        $("#delete_btn").click(form_box_check);
-    </script>
+    $("#renew_btn").click(form_box_check);
+
+    $("#delete_btn").click(form_box_check);
+</script>
+
 </html>
