@@ -36,7 +36,7 @@ app.use("/css", express.static("./node_modules/bootstrap/dist/css"));
 app.use("/js", express.static("./node_modules/bootstrap/dist/js"));
 app.use("/jquery", express.static("./node_modules/jquery/dist/"));
 
-var Host = "192.168.208.12"; //"192.168.208.12"//"192.168.0.14"//"192.168.66.12"//"192.168.1.188"
+var Host = "localhost"; //"192.168.208.12"//"192.168.0.14"//"192.168.66.12"//"192.168.1.188"
 var Port = 5438;
 
 var server = app.listen(Port, Host, function (req, res) {
