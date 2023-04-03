@@ -111,14 +111,14 @@
         });
         //let json = JSON.stringify(data);
         if (data["sel_device"] == "") str = "請選擇設備";
-        else if (parseInt(data["step1_Hight"]) +parseInt( data["step2_Hight"]) + parseInt(data["step3_Hight"]) > max_hight) str = "操作高度超過該設備的高度";
+        else if (parseInt(data["step1_Hight"]) + parseInt(data["step2_Hight"]) + parseInt(data["step3_Hight"]) > max_hight) str = "操作高度超過該設備的高度";
         if (str != "") {
             alert(str);
             return false;
         }
         return true;
     })
-    
+
 </script>
 
 </html>
