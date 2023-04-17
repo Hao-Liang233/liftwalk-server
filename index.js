@@ -51,7 +51,7 @@ var server = app.listen(Port, function (req, res) {
 });
 
 var sio = io(server);
-
+var Connect_index=0;
 sio.on("connection", function (socket) {
   console.log("Connected");
   // 接收'connection'事件訊息
@@ -87,9 +87,12 @@ sio.on("connection", function (socket) {
       copy_data["web_counter"] = 0;
       datainfo.device.push(copy_data);
     }
-    writeJSON(datainfo);
+    if(Connect_index >=5){
+      writeJSON(datainfo);
+    }
     //console.log(data.return);
     //console.log(data.now_hight);
+    Connect_index++
     if (data.return) socket.emit("Connect", datainfo.device[ind]);
   });
 
@@ -300,16 +303,6 @@ app.post("/delete_Device", function (req, res) {
   writeJSON(datainfo);
   res.send("1");
 });
-
-/* app.post("/web_manual", function(req, res){
-  var index=datainfo.device.findIndex(i => i.mac===req.body.mac);
-  var show_data={"err" : 0};
-  if(index != -1){
-    datainfo.device[index]["web_counter"] = req.body.web_counter;
-    datainfo.device[index]["web_flag"] = 6;
-  }
-  res.send(show_data);
-}); */
 
 function upJSON(newdata, flag) {
   //更新設定參數資料

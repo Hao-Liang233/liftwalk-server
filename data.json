@@ -1,1 +1,57 @@
-{"device":[{"mac":"C0:49:EF:BB:27:00","step1_Speed":"100","step1_Hight":"200","step2_Speed":"20","step2_Hight":"10","step3_Speed":"200","step3_Hight":"70","delay_time":"60","initial_hight":"60","initial_speed":"200","demoulding_H":"15","demoulding_S":"20","web_control":1,"web_flag":1,"web_counter":0,"now_hight":50,"return":true,"web_speed":100,"max_hight":200,"setfile_name":"C_2"}],"set_data":[{"name":"C_2","step1_Speed":"100","step1_Hight":"70","step2_Speed":"15","step2_Hight":"10","step3_Speed":"150","step3_Hight":"70","delay_time":"60","initial_hight":"50","initial_speed":"150","demoulding_H":"20","demoulding_S":"20"},{"name":"first","step1_Speed":"100","step1_Hight":"200","step2_Speed":"20","step2_Hight":"10","step3_Speed":"200","step3_Hight":"70","delay_time":"60","initial_hight":"60","initial_speed":"200","demoulding_H":"15","demoulding_S":"20"}],"total":2}
+{
+    "device": [
+        {
+            "mac": "C0:49:EF:BB:27:00",
+            "step1_Speed": "100",
+            "step1_Hight": "200",
+            "step2_Speed": "20",
+            "step2_Hight": "10",
+            "step3_Speed": "200",
+            "step3_Hight": "70",
+            "delay_time": "60",
+            "initial_hight": "60",
+            "initial_speed": "200",
+            "demoulding_H": "15",
+            "demoulding_S": "20",
+            "web_control": 0,
+            "web_flag": 0,
+            "web_counter": 0,
+            "now_hight": 50,
+            "return": true,
+            "web_speed": 100,
+            "max_hight": 200,
+            "setfile_name": "C_2"
+        }
+    ],
+    "set_data": [
+        {
+            "name": "C_2",
+            "step1_Speed": "100",
+            "step1_Hight": "70",
+            "step2_Speed": "15",
+            "step2_Hight": "10",
+            "step3_Speed": "150",
+            "step3_Hight": "70",
+            "delay_time": "60",
+            "initial_hight": "50",
+            "initial_speed": "150",
+            "demoulding_H": "20",
+            "demoulding_S": "20"
+        },
+        {
+            "name": "first",
+            "step1_Speed": "100",
+            "step1_Hight": "200",
+            "step2_Speed": "20",
+            "step2_Hight": "10",
+            "step3_Speed": "200",
+            "step3_Hight": "70",
+            "delay_time": "60",
+            "initial_hight": "60",
+            "initial_speed": "200",
+            "demoulding_H": "15",
+            "demoulding_S": "20"
+        }
+    ],
+    "total": 2
+}
