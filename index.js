@@ -87,8 +87,12 @@ sio.on("connection", function (socket) {
       copy_data["web_counter"] = 0;
       datainfo.device.push(copy_data);
     }
-    if(Connect_index >=5){
+    if(Connect_index%4 == 0){
       writeJSON(datainfo);
+    }
+    if(Connect_index >=23){
+      writeJSON_backup(datainfo);
+      Connect_index=3;
     }
     //console.log(data.return);
     //console.log(data.now_hight);
@@ -340,24 +344,54 @@ function writeJSON(data) {
   });
 }
 
+function writeJSON_backup(data) {
+  var str = JSON.stringify(data);
+  //將字串符傳入您的 json 文件中
+  fs.writeFile("./data_backup.json", str, function (err) {
+    if (err) {
+      console.error(err);
+    }
+    datainfo = data;
+    console.log("backup...");
+  });
+}
+
 function read_json_test() {
   var JSONdata = {};
   fs.open(path, "wx", function (err, fd) {
     if (err) {
       //檔案不存在就新增
-      fs.readFile("./data.json", function (err, data) {
-        if (err) {
-          return console.error(err);
-        }
-        //將二進制數據轉換為字串符
-        var read = data.toString();
-        //將字符串轉換為 JSON 對象
-        datainfo = JSON.parse(read);
-        /*         datainfo.set_data.forEach(function(value){
-          name_list.push(value.name);
-        }) */
-        console.log(datainfo);
-      });
+      try {
+        fs.readFile("./data.json", function (err, data) {
+          if (err) {
+            return console.error(err);
+          }
+          //將二進制數據轉換為字串符
+          var read = data.toString();
+          console.log(read);
+          if(read != "") datainfo = JSON.parse(read);
+          else{
+            fs.readFile("./data_backup.json", function (err, data) {
+              if (err) {
+                return console.error(err);
+              }
+              //將二進制數據轉換為字串符
+              var read = data.toString();
+              //將字符串轉換為 JSON 對象
+              datainfo = JSON.parse(read);
+              /*         datainfo.set_data.forEach(function(value){
+                name_list.push(value.name);
+              }) */
+              console.log(datainfo);
+            });
+          }
+          //將字符串轉換為 JSON 對象
+          console.log(datainfo);
+        });
+      } catch (err){
+        console.log(err);
+      }
+      
     } else {
       str = '{"device":[], "set_data":[], "total": 0}';
       datainfo = JSON.parse(str);

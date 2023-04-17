@@ -9,7 +9,7 @@
 <body>
     <%- include('../components/header.ejs'); %>
         <div class="container">
-            <form action="/control" method="post">
+            <form id="control_form" action="/control" method="post">
                 <div class="row pt-5">
                     <div class="col">
                         <label for="sel_device_select" class="form-label">設備選擇</label>
@@ -47,6 +47,10 @@
                                 <label class="form-label">目前設備:</label>
                                 <label id="now_device" class="form-label"></label>
                             </div>
+                            <div>
+                                <label class="form-label">執行時間:</label>
+                                <label id="execution_time" class="form-label"></label>
+                            </div>
                             <button type="submit" value="開始運作" name="send" class="btn btn-primary mb-5">
                                 開始運作
                             </button>
@@ -60,9 +64,10 @@
         $("input[name=step2_Hight]").after('<hr class="hr" />');
         $("input[name=step3_Hight]").after('<hr class="hr" />');
     });
-
+    
     var max_hight = 0;
     $("#sel_device").change(function () {
+        $("#now_device").text($(this).val());
         if ($(this).val() == "") return;
         $.ajax({
             url: "/get_Device_data",
@@ -76,6 +81,7 @@
                     $("#" + key).val(res[key]);
                 }
                 max_hight = res["max_hight"];
+                execution_time();
             },
             error: function (err) { console.log(err) },
         });
@@ -93,14 +99,11 @@
                     //console.log(key);
                     $("#" + key).val(res[key]);
                 }
+                execution_time();
             },
             error: function (err) { console.log(err) },
         });
     })
-
-    $("#sel_device").change(function () {
-        $("#now_device").text($(this).val());
-    });
 
     $("#start_up").click(function () {
         var str = "";
@@ -118,6 +121,46 @@
         }
         return true;
     })
+    
+    function rpm_mm_time(rpm, How_long){
+      var totle= (1/(rpm/60*5)) * How_long;
+      return totle;
+    }
+
+    function sec_to_min(sec){  //秒轉換成小時分鐘顯示
+      var min=0, hr=0;
+      var s="";
+      min = parseInt(sec/60); sec %= 60;
+      hr = parseInt(min/60); min %= 60; 
+      if(hr!=0) s+=String(hr)+"h:";
+      if(min!=0) s+=String(min)+"m:";
+      s+=String(sec)+"s";
+      return s;
+    }
+
+    function execution_time(){
+        var totle=0;
+        var all_long=0;
+        var parameter={};
+        let value = $('#control_form').serializeArray();
+        $.each(value, function (index, item) {
+            if(index-2 >=0) parameter[index-2] = parseInt(item.value);
+        });
+        for(var i=0;i<5;i+=2){
+          totle += rpm_mm_time(parameter[i], parameter[i+1]);
+          all_long += parameter[i+1];
+          if(parameter[i+1] > 0 && parameter[i] <= 0) 
+              $("#execution_time").text("參數不合理");  //有高度沒速度
+        }
+
+        totle += parameter[6]; //Time
+        totle += rpm_mm_time(parameter[10], parameter[9]);
+        all_long -= parameter[9];
+        totle += rpm_mm_time(parameter[8], all_long-parameter[7]);
+        
+        $("#execution_time").text(sec_to_min(parseInt(totle)));
+        //return parseInt(totle);
+    }
 
 </script>
 
