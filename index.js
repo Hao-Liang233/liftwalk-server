@@ -60,7 +60,7 @@ sio.on("connection", function (socket) {
   });
   socket.on("Connect", function (data) {
     //每一次ESP32確認連線狀態，判斷是否要更新資料到設備上
-    console.log("來自Arduino的mac:" + data);
+    console.log("來自Arduino的mac:" + data.mac);
     /*     for( var key in data){
       console.log(key);
       console.log(data[key]);
