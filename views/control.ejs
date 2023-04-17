@@ -144,7 +144,7 @@
         var parameter={};
         let value = $('#control_form').serializeArray();
         $.each(value, function (index, item) {
-            if(index-2 >=0) parameter[index-2] = parseInt(item.value);
+            if(index-((value.length-1)%10) >=0) parameter[index-((value.length-1)%10)] = parseInt(item.value);
         });
         for(var i=0;i<5;i+=2){
           totle += rpm_mm_time(parameter[i], parameter[i+1]);
