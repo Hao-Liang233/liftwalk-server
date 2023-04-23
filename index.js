@@ -50,6 +50,7 @@ var server = app.listen(Port, function (req, res) {
   read_json_test();
 });
 var Connected_num={};
+var allClients ={};
 var sio = io(server);
 var Connect_index=0;
 sio.on("connection", function (socket) {
@@ -57,6 +58,20 @@ sio.on("connection", function (socket) {
   // 接收'connection'事件訊息
   socket.on("disconnect", () => {
     console.log("disconnect"); // false
+    //console.log(allClients);
+    //console.log(Connected_num);
+    if(JSON.stringify(allClients) == "{}"){
+      console.log(socket.id);
+      return 0;
+    }
+    for(var key in allClients){
+      if(allClients[key] == socket.id){
+        Connected_num[key] = 0;
+      }
+    }
+    //console.log("-----------");
+    //console.log(Connected_num);
+    
   });
   socket.on("Connect", function (data) {
     //每一次ESP32確認連線狀態，判斷是否要更新資料到設備上
@@ -67,6 +82,7 @@ sio.on("connection", function (socket) {
     } */
     var ind = datainfo.device.length;
     var index = datainfo.device.findIndex((i) => i.mac === data.mac);
+    allClients[index] = socket.id;
     Connected_num[index]=1;
     //console.log(index);
     if (index != -1) {
@@ -388,13 +404,12 @@ function read_json_test() {
             });
           }
           //將字符串轉換為 JSON 對象
-          console.log(datainfo);
-          console.log("------------------------");
-          for( var key in datainfo.device){
-            console.log(key);
-            console.log(datainfo.device[key]);
-            Connected_num[key]=0;
-          }
+          //console.log(datainfo);
+          //console.log("------------------------");
+          datainfo.device.forEach(function (value, index, array) {
+            Connected_num[index]=0;
+            //console.log(value);
+          });
         });
       } catch (err){
         console.log(err);
