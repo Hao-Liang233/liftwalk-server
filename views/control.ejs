@@ -76,15 +76,16 @@
             data: { "mac": $(this).val() },
             success: function (res) {
                 //console.log(res)
+                if(res["Connected_num"] == 0){
+                    alert("設備未連線");
+                    return ;
+                }
                 for (var key in res) {
                     //console.log(key);
                     $("#" + key).val(res[key]);
                 }
                 max_hight = res["max_hight"];
                 execution_time();
-                if(res["Connected_num"] == 0){
-                    alert("設備未連線");
-                }
             },
             error: function (err) { console.log(err) },
         });
