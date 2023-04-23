@@ -49,7 +49,7 @@ var server = app.listen(Port, function (req, res) {
 
   read_json_test();
 });
-
+var Connected_num={};
 var sio = io(server);
 var Connect_index=0;
 sio.on("connection", function (socket) {
@@ -67,6 +67,7 @@ sio.on("connection", function (socket) {
     } */
     var ind = datainfo.device.length;
     var index = datainfo.device.findIndex((i) => i.mac === data.mac);
+    Connected_num[index]=1;
     //console.log(index);
     if (index != -1) {
       if (datainfo.device[index]["web_control"]) {
@@ -247,7 +248,7 @@ app.post("/control", function (req, res) {
   var S_ind = datainfo.set_data.findIndex(
     (i) => i.name === req.body.sel_setfile
   );
-  if (D_ind != -1) {
+  if (D_ind != -1 ) {
     for (var key in clean) {
       if (key != "name") datainfo.device[D_ind][key] = req.body[key];
     }
@@ -285,6 +286,7 @@ app.post("/get_Device_data", function (req, res) {
       show_data[key] = datainfo.device[index][key];
     }
     show_data["max_hight"] = datainfo.device[index]["max_hight"];
+    show_data["Connected_num"] = Connected_num[index];
   }
   res.send(show_data);
 });
@@ -387,6 +389,12 @@ function read_json_test() {
           }
           //將字符串轉換為 JSON 對象
           console.log(datainfo);
+          console.log("------------------------");
+          for( var key in datainfo.device){
+            console.log(key);
+            console.log(datainfo.device[key]);
+            Connected_num[key]=0;
+          }
         });
       } catch (err){
         console.log(err);
