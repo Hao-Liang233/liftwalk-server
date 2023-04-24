@@ -47,7 +47,7 @@ var server = app.listen(Port, function (req, res) {
 
   console.log("应用实例，访问地址为 http://%s:%s", host, port);
 
-  read_json_test();
+  read_jsonData();
 });
 var Connected_num={};
 var allClients ={};
@@ -374,7 +374,7 @@ function writeJSON_backup(data) {
   });
 }
 
-function read_json_test() {
+function read_jsonData() {
   var JSONdata = {};
   fs.open(path, "wx", function (err, fd) {
     if (err) {
