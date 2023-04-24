@@ -397,9 +397,6 @@ function read_json_test() {
               var read = data.toString();
               //將字符串轉換為 JSON 對象
               datainfo = JSON.parse(read);
-              /*         datainfo.set_data.forEach(function(value){
-                name_list.push(value.name);
-              }) */
               console.log(datainfo);
             });
           }
@@ -408,6 +405,9 @@ function read_json_test() {
           //console.log("------------------------");
           datainfo.device.forEach(function (value, index, array) {
             Connected_num[index]=0;
+            datainfo.device[index]["web_control"] = 0;
+            datainfo.device[index]["web_flag"] = 0;
+            datainfo.device[index]["web_counter"] = 0;
             //console.log(value);
           });
         });
