@@ -51,7 +51,7 @@
                                 <label class="form-label">執行時間:</label>
                                 <label id="execution_time" class="form-label"></label>
                             </div>
-                            <button type="submit" value="開始運作" name="send" class="btn btn-primary mb-5">
+                            <button type="submit" value="開始運作" name="send" id="start_up" class="btn btn-primary mb-5">
                                 開始運作
                             </button>
             </form>
@@ -67,7 +67,6 @@
     
     var max_hight = 0;
     $("#sel_device").change(function () {
-        $("#now_device").text($(this).val());
         if ($(this).val() == "") return;
         $.ajax({
             url: "/get_Device_data",
@@ -83,6 +82,9 @@
                 for (var key in res) {
                     //console.log(key);
                     $("#" + key).val(res[key]);
+                    if(key == "name"){
+                        $("#now_device").text(res[key]);
+                    }
                 }
                 max_hight = res["max_hight"];
                 execution_time();
@@ -117,7 +119,7 @@
             data[item.name] = item.value;
         });
         //let json = JSON.stringify(data);
-        if (data["sel_device"] == "") str = "請選擇設備";
+        if ($("#now_device").text() == "") str = "請選擇設備";
         else if (parseInt(data["step1_Hight"]) + parseInt(data["step2_Hight"]) + parseInt(data["step3_Hight"]) + parseInt(data["initial_hight"]) > max_hight) str = "操作高度超過該設備的高度";
         if (str != "") {
             alert(str);
