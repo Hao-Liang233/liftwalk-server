@@ -1,4 +1,4 @@
-# liftwalk-server
+# ESP32區網Server 由網頁控制ESP32
 
 這是一個可以透過網頁控制ESP32的伺服器，由SocketIO與ESP32進行通信來傳遞使用者於網頁上設定的參數和ESP32目前狀態的參數。
 ***
